@@ -63,6 +63,7 @@ fi
 #run demucs on downloaded files
 for file in $output_path/$project_name/temp/vox/*.mp3
 do
+    echo $file # added this line to print the path of the file before passing it to demucs
     demucs --two-stems=vocals "$file"
     if [ $? -ne 0 ]; then
         echo -e "\033[31mError: Failed to separate audio file $file.\033[0m"
@@ -72,6 +73,7 @@ do
 done
 for file in $output_path/$project_name/temp/instrumental/*.mp3
 do
+    echo $file # added this line to print the path of the file before passing it to demucs
     demucs --two-stems=vocals "$file"
     if [ $? -ne 0 ]; then
         echo -e "\033[31mError: Failed to separate audio file $file.\033[0m"
@@ -91,11 +93,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 mv $instrumental_file $output_path/$project_name/instrumental.wav
-    if [ $? -ne 0 ]; then
-        echo -e "\033[31mError: Failed to move instrumental file.\033[0m"
-        remove_files
-        exit 1
-    fi
+if [ $? -ne 0 ]; then
+    echo -e "\033[31mError: Failed to move instrumental file.\033[0m"
+    remove_files
+    exit 1
+fi
 
 #delete temp folder
 rm -rf $output_path/$project_name/temp
