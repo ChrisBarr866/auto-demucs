@@ -1,4 +1,4 @@
-import { proccessArgs, createTempDirectory, downloadAudioFilesFromYoutube } from "./lib.js";
+import { proccessArgs, removeTempFiles, createTempDirectory, downloadAudioFilesFromYoutube } from "./lib.js";
 // Get arguments from the command line
 let args = proccessArgs();
 // Create temp directory
@@ -7,7 +7,7 @@ createTempDirectory(args);
 downloadAudioFilesFromYoutube(args);
 // // Process audio files
 // processAudioFiles(args);
-// //Clean up temp files
-// removeTempFiles(args);
+//Clean up temp files
+removeTempFiles(args);
 //Print success message
-console.log("Process completed successfully.");
+console.log("\x1b[32mProcess Completed Successfully\x1b[0m");

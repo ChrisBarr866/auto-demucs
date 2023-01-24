@@ -50,13 +50,14 @@ export const removeTempFiles = (args) => {
     shell.rm('-f', `${outputPath}/${projectName}/vox.wav`);
     shell.rm('-f', `${outputPath}/${projectName}/instrumental.wav`);
     shell.rm('-rf', `${outputPath}/${projectName}`);
+    console.log("\x1b[32mTemp Files Removed\x1b[0m");
 };
 export const createTempDirectory = (args) => {
     let outputPath = args.outputPath;
     let projectName = args.projectName;
-    shell.mkdir('-p', `${outputPath}/${projectName}/temp/vox`);
-    shell.mkdir('-p', `${outputPath}/${projectName}/temp/instrumental`);
-    console.log("Temp Directory Created");
+    shell.mkdir('-p', `./${projectName}/temp/vox`);
+    shell.mkdir('-p', `./${projectName}/temp/instrumental`);
+    console.log("\x1b[32mTemp Directory Created\x1b[0m");
 };
 export const downloadAudioFilesFromYoutube = (args) => {
     let outputPath = args.outputPath;
