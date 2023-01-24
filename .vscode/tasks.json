@@ -1,0 +1,30 @@
+// vscode task that runs tsc and runs the node app
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "tsc: build - tsconfig.json",
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "node: app.js",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "app.js"
+            ],
+            "problemMatcher": [],
+            "dependsOn": [
+                "tsc: build - tsconfig.json"
+            ]
+        }
+    ]
+}

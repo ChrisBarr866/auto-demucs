@@ -1,4 +1,8 @@
 import { execSync } from "child_process";
+import os from 'os'
+import shell from 'shelljs';
+import process from 'node:process';
+
 
 interface Args {
   projectName: string;
@@ -14,6 +18,7 @@ export function proccessArgs(): Args {
     instrumentalLink: '',
     outputPath: ''
   }
+  console.log("Processing Args");
   process.argv.forEach((arg, i) => {
     if (arg === "--project-name") {
       if(!process.argv[i + 1]){
@@ -44,43 +49,56 @@ export function proccessArgs(): Args {
       args.outputPath = process.argv[i + 1];
     }
   });
+  console.log("Args Processed");
+  console.log(args)
   return args;
 };
 
 export const removeTempFiles = (args: Args) => {
   let outputPath = args.outputPath;
   let projectName = args.projectName;
-  execSync(`rm -rf ${outputPath}/${projectName}/temp`);
-  execSync(`rm -f ${outputPath}/${projectName}/vox.wav`);
-  execSync(`rm -f ${outputPath}/${projectName}/instrumental.wav`);
-  execSync(`rm -rf ${outputPath}/${projectName}`);
+  shell.rm('-rf', `${outputPath}/${projectName}/temp`);
+  shell.rm('-f', `${outputPath}/${projectName}/vox.wav`);
+  shell.rm('-f', `${outputPath}/${projectName}/instrumental.wav`);
+  shell.rm('-rf', `${outputPath}/${projectName}`);
+  };
+
+  export const createTempDirectory = (args: Args) => {
+    let outputPath = args.outputPath;
+    let projectName = args.projectName;
+    shell.mkdir('-p', `${outputPath}/${projectName}/temp/vox`);
+    shell.mkdir('-p', `${outputPath}/${projectName}/temp/instrumental`);
+    console.log("Temp Directory Created");
 };
 
-export const createTempDirectory = (args: Args) => {
-  execSync(`mkdir -p ${args.outputPath}/${args.projectName}/temp/vox`);
-  execSync(`mkdir -p ${args.outputPath}/${args.projectName}/temp/instrumental`);
-};
+export const downloadAudioFilesFromYoutube = (args: Args) => {
+  let outputPath = args.outputPath;
+  let projectName = args.projectName;
+  let voxLink = args.voxLink;
+  let instrumentalLink = args.instrumentalLink;
 
-export const downloadAudioFilesFromYoutube = () => {
+  console.log("Downloading Audio Files From Youtube using the following args: ");
+  console.log(args);
+
   try {
-    execSync(
-      `youtube-dl -x --audio-format mp3 -o "${outputPath}/${projectName}/temp/vox/%(title)s.%(ext)s" ${voxLink}`
+    shell.exec(
+      `yt-dlp -x --audio-format mp3 -o "${outputPath}/${projectName}/temp/vox/%(title)s.%(ext)s" ${voxLink}`
     );
   } catch (error) {
     console.log(`Error: Failed to download audio file from ${voxLink}`);
-    removeFiles(outputPath, projectName);
+    shell.rm('-rf', `${outputPath}/${projectName}`);
     process.exit(1);
   }
 
   try {
-    execSync(
-      `youtube-dl -x --audio-format mp3 -o "${outputPath}/${projectName}/temp/instrumental/%(title)s.%(ext)s" ${instrumentalLink}`
+    shell.exec(
+      `yt-dlp -x --audio-format mp3 -o "${outputPath}/${projectName}/temp/instrumental/%(title)s.%(ext)s" ${instrumentalLink}`
     );
   } catch (error) {
     console.log(
       `Error: Failed to download audio file from ${instrumentalLink}`
     );
-    removeFiles(outputPath, projectName);
+    shell.rm('-rf', `${outputPath}/${projectName}`);
     process.exit(1);
   }
 };
