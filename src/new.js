@@ -57,7 +57,7 @@ voxFiles.split("\n").forEach(file => {
         return;
     console.log(file);
     try {
-        execSync(demucs--, two - stems, vocals, "${file}");
+        execSync('demucs --two-stems=vocals "${file}"');
     }
     catch (error) {
         console.log(Error, Failed, to, separate, audio, file, $, { file });
@@ -70,10 +70,10 @@ instrumentalFiles.split("\n").forEach(file => {
         return;
     console.log(file);
     try {
-        execSync(demucs--, two - stems, vocals, "${file}");
+        execSync('demucs --two-stems=vocals "${file}"');
     }
     catch (error) {
-        console.log(Error, Failed, to, separate, audio, file, $, { file });
+        console.log("Error: Failed to separate audio file ${file})");
         removeFiles(outputPath, projectName);
         process.exit(1);
     }
@@ -82,7 +82,7 @@ instrumentalFiles.split("\n").forEach(file => {
 let voxFile = "";
 let instrumentalFile = "";
 try {
-    voxFile = execSync(ls, $, { outputPath } / $, { projectName } / temp / vox / separated / htdemucs / ,  * vocals.wav).toString();
+    voxFile = execSync('ls ${outputPath}/${projectName}/temp/vox/separated/htdemucs/*vocals.wav').toString();
 }
 catch (error) {
     console.log("Error: Failed to find vox file.");
@@ -90,32 +90,29 @@ catch (error) {
     process.exit(1);
 }
 try {
-    instrumentalFile = execSync(ls, $, { outputPath } / $, { projectName } / temp / instrumental / separated / htdemucs);
+    instrumentalFile = execSync('ls ${outputPath}/${projectName}/temp/instrumental/separated/htdemucs/*no-vocals.wav').toString();
 }
-finally {
-} /*no-vocals.wav).toString();
-} catch (error) {
-console.log("Error: Failed to find instrumental file.");
-removeFiles(outputPath, projectName);
-process.exit(1);
+catch (error) {
+    console.log("Error: Failed to find instrumental file.");
+    removeFiles(outputPath, projectName);
+    process.exit(1);
 }
-
 try {
-execSync(mv ${voxFile} ${outputPath}/${projectName}/vox.wav);
-} catch (error) {
-console.log("Error: Failed to move vox file.");
-removeFiles(outputPath, projectName);
-process.exit(1);
+    execSync('mv ${voxFile} ${outputPath}/${projectName}/vox.wav');
 }
-
+catch (error) {
+    console.log("Error: Failed to move vox file.");
+    removeFiles(outputPath, projectName);
+    process.exit(1);
+}
 try {
-execSync(mv ${instrumentalFile} ${outputPath}/${projectName}/instrumental.wav);
-} catch (error) {
-console.log("Error: Failed to move instrumental file.");
-removeFiles(outputPath, projectName);
-process.exit(1);
+    execSync('mv ${instrumentalFile} ${outputPath}/${projectName}/instrumental.wav');
 }
-
+catch (error) {
+    console.log("Error: Failed to move instrumental file.");
+    removeFiles(outputPath, projectName);
+    process.exit(1);
+}
 //delete temp folder
 removeFiles(outputPath, projectName);
 console.log("Process completed successfully.");
